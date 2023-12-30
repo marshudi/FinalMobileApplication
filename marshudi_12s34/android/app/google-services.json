@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "633878999381",
+    "project_id": "final-bc16e",
+    "storage_bucket": "final-bc16e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:633878999381:android:c7ac65e9910b694a323fdc",
+        "android_client_info": {
+          "package_name": "com.example.marshudi_12s34"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBU299hBU7Bh7FmyhEduLnwFIBIDDVpiHE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

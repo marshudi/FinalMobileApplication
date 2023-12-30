@@ -1,0 +1,9 @@
+image: from the asseet
+coffeeID:22
+coffeeName: Irish
+quantity:400
+price: 2.5
+description:Irish coffee consists of black coffee, whiskey and sugar, topped with whipped cream. 
+
+
+Note: rating should be save in the database
