@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:marshudi_12s34/BottomNav.dart';
 import 'package:marshudi_12s34/Home.dart';
+import 'package:marshudi_12s34/LocalNoti.dart';
 import 'package:marshudi_12s34/LocalNotification.dart';
 
 class OrderPage extends StatefulWidget {
@@ -26,6 +27,7 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> {
 
   DatabaseReference mydb = FirebaseDatabase.instance.ref("Coffee");
+  DatabaseReference mydbOrder = FirebaseDatabase.instance.ref("Order");
   double currentRate=0.0;
   
   String rateDesc="";
@@ -96,16 +98,46 @@ class _OrderPageState extends State<OrderPage> {
 
           ElevatedButton(onPressed: (){
 
-
             totalPrice=double.parse(widget.coffeePrice)*reqQuan.toInt();
-
             newQuan=int.parse(widget.coffeeQuantity)-reqQuan.toInt();
 
-            mydb.child(widget.coffeeKey).update({
-              "ratings":currentRate.toString(),
-              "quantity":newQuan.toString()
-            });
+            //show alert dialog to confirm order/purchase
+            showDialog(context: context,
+              builder: (BuildContext context){
+                return  AlertDialog(
+                      title: Text("Confirm Order"),
+                      content: Text("you are buying ${widget.coffeeName}\n "
+                          "Total price $totalPrice OMR \n"
+                          "Are you sure you want to buy this product!"),
 
+                  actions: [
+                        ElevatedButton(onPressed: (){
+                          Navigator.pop(context);
+
+                          //to update ratings and product quantity
+                          mydb.child(widget.coffeeKey).update({
+                            "ratings":currentRate.toString(),
+                            "quantity":newQuan.toString()
+                          });
+
+                          //to add buyers details into a new table called "Order"
+
+                          mydbOrder.push().set({
+                            "id":"Student ID",
+                            "name":"Student Name",
+                            "quantity":"${reqQuan.toInt()}",
+                            "totalPrice":"${totalPrice}"
+                          });
+                        }, child: Text("Confirm")),
+                        ElevatedButton(onPressed: (){
+                          Navigator.pop(context);
+                        }, child: Text("Cancel")),
+                      ],
+                    );
+
+              }
+
+            );
 
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Total Price: ${totalPrice}")));
             
@@ -121,8 +153,10 @@ class _OrderPageState extends State<OrderPage> {
             mydb.child(widget.coffeeKey).remove();
 
 
-            LocalNotification.startNoti();
-            LocalNotification.showNoti(id: 1, title:"${widget.coffeeName}", body: "Deleted Successfully");
+            LocalNoti.startNoti();
+
+            LocalNoti.showNoti(id: int.parse(widget.coffeeId), title: "${widget.coffeeName}", body: "Deleted Successfully");
+
 
           }, child: Text("Deleted")),
           
@@ -132,4 +166,7 @@ class _OrderPageState extends State<OrderPage> {
       ),
     );
   }
+
+ // void alertDialog()
+  
 }
